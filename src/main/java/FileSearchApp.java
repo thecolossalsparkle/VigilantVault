@@ -14,7 +14,7 @@ public class FileSearchApp extends JFrame {
 
         // Model for JList
         model = new DefaultListModel<>();
-        loadFiles("/Users/thecolossalsparkle/Desktop"); // Update this path
+        loadFiles("data/myFiles"); // Use relative path
 
         // Set up JList
         JList<String> fileList = new JList<>(model);
@@ -35,8 +35,10 @@ public class FileSearchApp extends JFrame {
         setVisible(true);
     }
 
-    private void loadFiles(String directoryPath) {
-        File directory = new File(directoryPath);
+    private void loadFiles(String relativePath) {
+        // Get the current working directory
+        String currentDir = System.getProperty("user.dir");
+        File directory = new File(currentDir, relativePath); // Create file with relative path
         File[] files = directory.listFiles();
         if (files != null) {
             for (File file : files) {
@@ -49,7 +51,8 @@ public class FileSearchApp extends JFrame {
 
     private void searchFiles(String query) {
         model.clear();
-        File directory = new File("/Users/thecolossalsparkle/Desktop"); // Update this path
+        String currentDir = System.getProperty("user.dir");
+        File directory = new File(currentDir, "data/myFiles"); // Use relative path
 
         File[] files = directory.listFiles();
         if (files != null) {
