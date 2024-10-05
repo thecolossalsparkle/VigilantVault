@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FileSearchApp extends JFrame {
     private DefaultListModel<String> model;
