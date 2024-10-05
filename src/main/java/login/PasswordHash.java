@@ -4,21 +4,21 @@ import java.security.MessageDigest;
 import java.util.Map;
 
 public class PasswordHash {
-    private static final String FILE_PATH = "D:\\Learning\\JavaMentorship\\PMS\\src\\main";
+    private static final String FILE_PATH = "login.txt";
 
     public static boolean checkPassword(String username, String password) {
-        Map<String, String> users = FileHandler.readUsers("D:\\Learning\\JavaMentorship\\PMS\\src\\main\\resources\\login.txt");
+        Map<String, String> users = FileHandler.readUsers("login.txt");
         String passwordHash = hashPassword(password);
         return passwordHash.equals(users.get(username.trim().toLowerCase()));
     }
 
     public static boolean register(String username, String password) {
-        Map<String, String> users = FileHandler.readUsers("D:\\Learning\\JavaMentorship\\PMS\\src\\main\\resources\\login.txt");
+        Map<String, String> users = FileHandler.readUsers("login.txt");
         if (users.containsKey(username.trim().toLowerCase())) {
             return false; // Username already exists
         }
         String passwordHash = hashPassword(password);
-        FileHandler.writeUser("D:\\Learning\\JavaMentorship\\PMS\\src\\main\\resources\\login.txt", username.trim().toLowerCase(), passwordHash);
+        FileHandler.writeUser("login.txt", username.trim().toLowerCase(), passwordHash);
         return true;
     }
 

@@ -1,5 +1,7 @@
 package login;
 
+import GUI.home;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,7 +14,7 @@ public class LoginGUI extends CommonFeatures {
     private JButton loginButton;
     private JButton signUpButton;
 
-    LoginGUI() {
+    public LoginGUI() {
         frame = new JFrame("Login");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(320, 320);
@@ -42,6 +44,8 @@ public class LoginGUI extends CommonFeatures {
                 String password = new String(passwordField.getPassword());
                 if (PasswordHash.checkPassword(username, password)) {
                     JOptionPane.showMessageDialog(frame, "Login successful");
+                    frame.dispose();
+                    new home();
                 } else {
                     JOptionPane.showMessageDialog(frame, "Invalid credentials");
                 }
