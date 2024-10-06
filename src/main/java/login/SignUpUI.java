@@ -15,21 +15,44 @@ public class SignUpUI {
     public SignUpUI() {
         frame = new JFrame("Sign Up");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(320, 320);
-        frame.setLayout(new FlowLayout());
+        frame.setSize(500, 700);
 
-        usernameField = new JTextField(30);
-        passwordField = new JPasswordField(30);
+        // Use GridBagLayout for better arrangement
+        frame.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); // Add some padding around components
+
+        // Username label and field
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        frame.add(new JLabel("Username:"), gbc);
+
+        gbc.gridx = 1;
+        usernameField = new JTextField(15);
+        frame.add(usernameField, gbc);
+
+        // Password label and field
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        frame.add(new JLabel("Password:"), gbc);
+
+        gbc.gridx = 1;
+        passwordField = new JPasswordField(15);
+        frame.add(passwordField, gbc);
+
+        // Sign Up button
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2; // Span across two columns
         signUpButton = new JButton("Sign Up");
+        frame.add(signUpButton, gbc);
+
+        // Back button
+        gbc.gridy = 3;
         backButton = new JButton("\u2190");
+        frame.add(backButton, gbc);
 
-        frame.add(new JLabel("Username:"));
-        frame.add(usernameField);
-        frame.add(new JLabel("Password:"));
-        frame.add(passwordField);
-        frame.add(signUpButton);
-        frame.add(backButton);
-
+        // Action Listeners
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

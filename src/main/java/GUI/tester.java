@@ -6,95 +6,96 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 
 public class tester {
 
-    Frame f1 = new Frame();
+    JFrame f1 = new JFrame();
     String CrimePath;
     JList<String> fileList;
     String[] files;
-    File[] fileObjects; // Store File objects for sorting
+    File[] fileObjects;
     JTextField searchField;
-    JButton sortByDateBtn, sortBySizeBtn, searchBtn,back;
+    JButton sortByDateBtn, sortBySizeBtn, searchBtn, back, editBtn, deleteBtn;
 
     tester(String Crimefieldpath) {
         this.CrimePath = Crimefieldpath;
         f1.setTitle("Criminal Files Viewer");
         f1.setSize(600, 800);
+        f1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f1.setLayout(new BorderLayout());
+        f1.getContentPane().setBackground(Color.LIGHT_GRAY);
 
-        // Label for the current folder
-        JLabel Home = new JLabel(Crimefieldpath );
-        Home.setBounds(50, 20, 300, 30);
-        f1.add(Home);
+        // Header panel with title
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        JLabel titleLabel = new JLabel("Criminal Files Viewer", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        titleLabel.setForeground(Color.BLUE);
+        headerPanel.add(titleLabel, BorderLayout.CENTER);
 
-        // Initialize buttons and search field
-        initSearchAndSortButtons();
+        // Initialize buttons and search field in a separate panel
+        initSearchAndSortButtons(headerPanel);
+
+        // Add header panel to the top
+        f1.add(headerPanel, BorderLayout.NORTH);
 
         // Load and display files
         showFiles();
         fileList = new JList<>(files);
-        fileList.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {  // Double-click
-                    String selectedFile = fileList.getSelectedValue();
-                    new Formouput(Crimefieldpath, selectedFile);
-                    f1.dispose();
-                    System.out.println("Double-clicked on: " + selectedFile);
-                }
-            }
-        });
-
+        fileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(fileList);
-        f1.setLayout(new BorderLayout());
         f1.add(scrollPane, BorderLayout.CENTER);
 
         f1.setVisible(true);
     }
 
-    private void initSearchAndSortButtons() {
+    private void initSearchAndSortButtons(JPanel headerPanel) {
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
         // Search field
         searchField = new JTextField(20);
-        searchField.setBounds(50, 60, 200, 30);
-        f1.add(searchField);
+        buttonPanel.add(searchField);
 
         // Search button
         searchBtn = new JButton("Search");
-        searchBtn.setBounds(270, 60, 100, 30);
-        f1.add(searchBtn);
         searchBtn.addActionListener(e -> searchFiles(searchField.getText()));
+        buttonPanel.add(searchBtn);
 
         // Sort by date button
         sortByDateBtn = new JButton("Sort by Date");
-        sortByDateBtn.setBounds(50, 100, 150, 30);
-        f1.add(sortByDateBtn);
         sortByDateBtn.addActionListener(e -> sortByDate());
+        buttonPanel.add(sortByDateBtn);
 
         // Sort by size button
         sortBySizeBtn = new JButton("Sort by Size");
-        sortBySizeBtn.setBounds(220, 100, 150, 30);
-        f1.add(sortBySizeBtn);
         sortBySizeBtn.addActionListener(e -> sortBySize());
+        buttonPanel.add(sortBySizeBtn);
 
-        back = new JButton("back");
-        back.setBounds(220, 100, 500, 30);
+        // Edit button
+        editBtn = new JButton("Edit Selected");
+        editBtn.addActionListener(e -> editSelectedFile());
+        buttonPanel.add(editBtn);
 
-        back.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                f1.dispose();
-                new home();
+        // Delete button
+        deleteBtn = new JButton("Delete Selected");
+        deleteBtn.addActionListener(e -> deleteSelectedFile());
+        buttonPanel.add(deleteBtn);
 
-            }
+        // Back button
+        back = new JButton("Back");
+        back.addActionListener(e -> {
+            f1.dispose();
+            new home();
         });
-        f1.add(back);
+        buttonPanel.add(back);
+
+        // Add button panel to the header panel
+        headerPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
     public void showFiles() {
         File folder = new File(CrimePath);
         if (folder.exists() && folder.isDirectory()) {
-            // Store file objects for sorting
             fileObjects = folder.listFiles();
             if (fileObjects != null) {
                 files = Arrays.stream(fileObjects).map(File::getName).toArray(String[]::new);
@@ -106,7 +107,6 @@ public class tester {
         }
     }
 
-    // Search for files matching the query
     public void searchFiles(String query) {
         if (fileObjects != null && !query.isEmpty()) {
             files = Arrays.stream(fileObjects)
@@ -117,7 +117,6 @@ public class tester {
         }
     }
 
-    // Sort files by date (last modified)
     public void sortByDate() {
         if (fileObjects != null) {
             Arrays.sort(fileObjects, Comparator.comparingLong(File::lastModified).reversed());
@@ -126,7 +125,6 @@ public class tester {
         }
     }
 
-    // Sort files by size
     public void sortBySize() {
         if (fileObjects != null) {
             Arrays.sort(fileObjects, Comparator.comparingLong(File::length).reversed());
@@ -135,14 +133,43 @@ public class tester {
         }
     }
 
-    // Update the JList with the sorted or searched results
     private void updateFileList() {
         fileList.setListData(files);
     }
 
+    private void editSelectedFile() {
+        String selectedFile = fileList.getSelectedValue();
+        if (selectedFile != null) {
+            new EditFile(f1, selectedFile);
+        } else {
+            JOptionPane.showMessageDialog(f1, "Please select a file to edit.");
+        }
+    }
+
+    private void deleteSelectedFile() {
+        String selectedFile = fileList.getSelectedValue();
+        if (selectedFile != null) {
+            int confirmation = JOptionPane.showConfirmDialog(f1,
+                    "Are you sure you want to delete " + selectedFile + "?",
+                    "Delete Confirmation", JOptionPane.YES_NO_OPTION);
+            if (confirmation == JOptionPane.YES_OPTION) {
+                File fileToDelete = new File(CrimePath, selectedFile);
+                if (fileToDelete.delete()) {
+                    JOptionPane.showMessageDialog(f1, "File deleted: " + selectedFile);
+                    showFiles(); // Refresh the file list
+                    updateFileList();
+                } else {
+                    JOptionPane.showMessageDialog(f1, "Failed to delete file: " + selectedFile);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(f1, "Please select a file to delete.");
+        }
+    }
+
     public static void main(String[] args) {
         String path = System.getProperty("user.dir");
-        String mainpath=path+"\\models\\d";
+        String mainpath = path + "\\models\\d";
         new tester(mainpath); // Example path
     }
 }

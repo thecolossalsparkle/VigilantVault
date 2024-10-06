@@ -76,16 +76,5 @@ public class RecordsLogicc {
         LocalTime Time= LocalTime.now();
         DateTimeFormatter format=DateTimeFormatter.ofPattern("HH:mm:ss");
         time=format.format(Time);
-
-
-
-
     }
-
-
-
-
-
-
-
 }

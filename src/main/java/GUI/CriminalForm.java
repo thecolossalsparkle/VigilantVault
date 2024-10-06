@@ -13,7 +13,7 @@ public class CriminalForm {
     JButton clear, submit, back, uploadimage;
     JTextField Name, Description, ActionsTaken;
     JComboBox<String> combo;
-    String[] options = {"A", "B", "C", "D"};
+    String[] options = {"DSA", "JAVA", "HEADFIRST", "YOUTUBE VIDEOS","48 LAWS OF POWER", "MASTERY", "LEETCODE"};
     public String gender, path;
     int count = 0;
 

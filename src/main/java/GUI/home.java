@@ -109,75 +109,98 @@
 package GUI;
 
 import login.LoginGUI;
-
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
 public class home {
 
-    String[] options = {"A", "B", "C", "D"};
+    String[] options = {"DSA", "JAVA", "HEADFIRST", "YOUTUBE VIDEOS", "48 LAWS OF POWER", "MASTERY", "LEETCODE"};
     JFrame j1 = new JFrame();
-    JButton CrimeRegisteration,logout;
-
+    JButton logout;
 
     public home() {
-
         j1.setTitle("Home - Criminal Form");
-        j1.setSize(600, 500); // Increased size for better layout
+        j1.setSize(1200, 700);
+        j1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        j1.setLayout(new BorderLayout()); // Use BorderLayout for the main frame
+        j1.getContentPane().setBackground(Color.LIGHT_GRAY); // Set background color
 
-        JLabel Home = new JLabel("Home:");
-        Home.setBounds(50, 50, 100, 30); // Adjusted position
-        j1.add(Home);
+        // Create and add header
+        Header header = new Header();
+        j1.add(header, BorderLayout.NORTH); // Add header to the top
 
+        // Create a JPanel for the button content
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(options.length + 2, 1, 10, 10)); // Use GridLayout for consistent spacing
+        buttonPanel.setBackground(Color.LIGHT_GRAY); // Same background color as the JFrame
 
-        for (int i = 0; i < options.length; i++) {
-            String name = options[i];
-            // Use File.separator for cross-platform compatibility
-            String nams = System.getProperty("user.dir");
-            String finl = nams + File.separator + "models" + File.separator + name;
+        // Create a heading for "Register Crime"
+        JLabel registerCrimeLabel = new JLabel("Register Crime", JLabel.CENTER);
+        registerCrimeLabel.setFont(new Font("Arial", Font.BOLD, 24)); // Set heading font
+        registerCrimeLabel.setForeground(Color.BLACK); // Set heading color
+        buttonPanel.add(registerCrimeLabel); // Add heading to the panel
 
-            System.out.println(finl); // Print the path to verify correctness
-
-            File file = new File(finl);
-            // Check if the directory exists or create it
-            if (!file.exists()) {
-                if (file.mkdirs()) {
-                    System.out.println("Directory " + name + " created successfully.");
-                } else {
-                    System.out.println("Failed to create directory " + name);
+        // Create buttons for the options
+        for (String name : options) {
+            JButton button = new JButton(name);
+            button.setFont(new Font("Arial", Font.PLAIN, 16)); // Set button font
+            button.setBackground(Color.WHITE); // Set button background color
+            button.setBorder(BorderFactory.createRaisedBevelBorder()); // Add a border
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    openFolder("models/" + name);
+                    j1.dispose();
                 }
-            }
-
-            // Now, if the directory exists, add the button
-            if (file.exists() && file.isDirectory()) {
-                JButton button = new JButton(options[i]);
-                button.setBounds(150, 150 + (i * 50), 200, 30); // Adjusted to align buttons vertically
-                button.addActionListener(new ActionListener() {
-                    @Override // Can change to lambda function
-                    public void actionPerformed(ActionEvent e) {
-                        openfolder("models/" + name);
-                        j1.dispose();
-                    }
-                });
-                j1.add(button);
-            }
+            });
+            buttonPanel.add(button); // Add button to the panel
         }
 
-
-
-
-    logout = new JButton("Logout");
-        logout.setBounds(150, 150 , 400, 30); // Adjusted to align buttons vertically
+        // Logout button
+        logout = new JButton("Logout");
+        logout.setFont(new Font("Arial", Font.PLAIN, 14)); // Set button font
+        logout.setBackground(Color.WHITE); // Set button background color
+        logout.setBorder(BorderFactory.createRaisedBevelBorder()); // Add a border
         logout.addActionListener(new ActionListener() {
-            @Override // Can change to lambda function
+            @Override
             public void actionPerformed(ActionEvent e) {
                 j1.dispose();
                 new LoginGUI();
             }
         });
-        j1.add(logout);
+        buttonPanel.add(logout); // Add to panel
+
+        // Add the button panel to the center of the frame
+        j1.add(buttonPanel, BorderLayout.CENTER);
+
+        // Create and add footer
+        Footer footer = new Footer();
+        j1.add(footer, BorderLayout.SOUTH); // Add footer to the bottom
+
+        j1.setVisible(true);
+        j1.setLocationRelativeTo(null);
+    }
+
+    public void openFolder(String name) {
+        File folder = new File(name);
+        if (folder.exists() && folder.isDirectory()) {
+            new tester(name);
+        } else {
+            System.out.println("Folder does not exist");
+        }
+    }
+
+    public static void main(String[] args) {
+        new home();
+    }
+}
+
+
+
+
 
         // Search button
 //        searchButton = new JButton("Search");
@@ -203,32 +226,36 @@ public class home {
 //        });
 
         // Crime Registration button
-        CrimeRegisteration = new JButton("Register Crime");
-        CrimeRegisteration.setBounds(150, 400 , 400, 30); // Centered it better
-        CrimeRegisteration.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                j1.dispose();
-                new CriminalForm();
-            }
-        });
-        j1.add(CrimeRegisteration);
+//        CrimeRegisteration = new JButton("Register Crime");
+//        CrimeRegisteration.setBounds(150, 400 , 400, 30); // Centered it better
+//        CrimeRegisteration.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                j1.dispose();
+//                new CriminalForm();
+//            }
+//        });
+//        j1.add(CrimeRegisteration);
+//
+//        j1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        j1.setLayout(null);
+//        j1.setVisible(true);
+//    }
+//
+//    public void openfolder(String name) {
+//        File folder = new File(name);
+//        if (folder.exists() && folder.isDirectory()) {
+//            new tester(name);
+//        } else {
+//            System.out.println("Folder does not exist");
+//        }
+//    }
 
-        j1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        j1.setLayout(null);
-        j1.setVisible(true);
-    }
-
-    public void openfolder(String name) {
-        File folder = new File(name);
-        if (folder.exists() && folder.isDirectory()) {
-            new tester(name);
-        } else {
-            System.out.println("Folder does not exist");
-        }
-    }
-
-    public static void main(String[] args) {
-        new home();
-    }
-}
+//    public static void main(String[] args) {
+//
+//        new home();
+//        Header header = new Header();
+//        Footer footer = new Footer();
+//
+//    }
+//}
