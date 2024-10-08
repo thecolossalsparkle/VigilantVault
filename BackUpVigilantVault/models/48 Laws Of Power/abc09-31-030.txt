@@ -1,0 +1,8 @@
+Name: abc
+Gender: Female
+C:\Users\Jeff Jacob John\Documents\7thpage.jpg
+Date: 2024-10-07
+Time: 09:31:03
+Subject: 48 Laws Of Power
+Description: did not read
+Action Taken: okay
